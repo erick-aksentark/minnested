@@ -22,10 +22,10 @@ export const CONFIG = {
   // Egen modell: legg en .glb i mappen modell/ og skriv navnet her,
   // f.eks. "modell/bygg.glb". Modellen må være i meter med Y opp,
   // og origo i byggets referansepunkt. null betyr testhuset.
-  modellFil: null,
+  modellFil: "Moisund Elvebredd 15.glb",
 
   // Skala for bordmodell-visningen (1:50).
-  bordmodellSkala: 1 / 25,
+  bordmodellSkala: 1 / 50,
 
   // Utjevning av skjelving. Lavere filterBeta gir roligere, men tregere bilde.
   utjevning: { filterMinCF: 0.0001, filterBeta: 0.005 }
