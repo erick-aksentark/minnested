@@ -22,7 +22,7 @@ export const CONFIG = {
   // Egen modell: legg en .glb i mappen modell/ og skriv navnet her,
   // f.eks. "modell/bygg.glb". Modellen må være i meter med Y opp,
   // og origo i byggets referansepunkt. null betyr testhuset.
-  modellFil: "Moisund Elvebredd 15.glb",
+  modellFil: "modell/Moisund Elvebredd 15.glb",
 
   // Skala for bordmodell-visningen (1:50).
   bordmodellSkala: 1 / 50,
