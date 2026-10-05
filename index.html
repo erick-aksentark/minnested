@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minnested</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script type="importmap">
+{ "imports": {
+  "three": "./vendor/three/three.module.js",
+  "three/addons/": "./vendor/three/addons/"
+} }
+</script>
+<style>
+  :root {
+    --papir: #eef0ea;
+    --blekk: #1c2430;
+    --linje: #9aa39a;
+    --skjemagronn: #2f5d4a;
+    --hvit: #ffffff;
+    --grotesk: "Barlow Condensed", "DIN Condensed", "Arial Narrow", sans-serif;
+    --serif: "Source Serif 4", Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--blekk); color: var(--blekk); font-family: var(--grotesk); }
+  #ar { position: fixed; inset: 0; overflow: hidden; }
+  #ar video { object-fit: cover; }
+
+  /* Startskjerm som et utfylt skjema */
+  #start { position: fixed; inset: 0; background: var(--papir); overflow-y: auto;
+    padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px); }
+  .skjema { max-width: 440px; border: 2px solid var(--blekk); background: var(--hvit); }
+  .hode { padding: 18px 16px 14px; border-bottom: 2px solid var(--blekk); }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: 44px; line-height: 1; margin: 0; letter-spacing: -0.01em; }
+  .undertittel { margin: 8px 0 0; font-size: 17px; color: var(--skjemagronn); font-weight: 500; }
+  .felter { display: grid; grid-template-columns: 1fr 1fr; margin: 0; }
+  .felt { padding: 8px 12px 10px; border-bottom: 1px solid var(--blekk); min-height: 62px; }
+  .felt:nth-child(odd) { border-right: 1px solid var(--blekk); }
+  .felt dt { font-size: 13px; color: var(--skjemagronn); letter-spacing: 0.02em; }
+  .felt dd { margin: 2px 0 0; font-size: 21px; font-weight: 500; }
+  .instruks { padding: 14px 16px; margin: 0; font-family: var(--serif); font-size: 16px; line-height: 1.5; max-width: 60ch; border-bottom: 2px solid var(--blekk); }
+  #startknapp { display: block; width: 100%; border: 0; background: var(--skjemagronn); color: var(--hvit);
+    font: 600 22px var(--grotesk); padding: 16px; cursor: pointer; text-align: left; }
+  #startknapp:focus-visible, .knapp:focus-visible { outline: 3px solid #f2c94c; outline-offset: 2px; }
+  .fot { max-width: 440px; margin: 12px 0 0; font-size: 14px; color: #4b544c; }
+  .fot a { color: var(--skjemagronn); }
+
+  /* AR-kontroller på venstre side */
+  #ar-ui { position: fixed; inset: 0; pointer-events: none; z-index: 10; }
+  #status { position: absolute; left: 12px; top: calc(env(safe-area-inset-top) + 12px); max-width: calc(100% - 24px);
+    background: var(--papir); border: 2px solid var(--blekk); padding: 6px 10px; font-size: 17px; font-weight: 500; }
+  #status.funnet { background: var(--skjemagronn); color: var(--hvit); border-color: var(--skjemagronn); }
+  .panel { position: absolute; left: 12px; bottom: calc(env(safe-area-inset-bottom) + 12px); width: 168px;
+    background: var(--papir); border: 2px solid var(--blekk); pointer-events: auto; }
+  .gruppe { border-bottom: 1px solid var(--blekk); padding: 6px 8px 8px; }
+  .gruppe:last-child { border-bottom: 0; }
+  .gruppe span { display: block; font-size: 13px; color: var(--skjemagronn); margin-bottom: 4px; }
+  .valg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--blekk); }
+  .knapp { border: 0; background: var(--hvit); color: var(--blekk); font: 500 16px var(--grotesk); padding: 8px 4px; cursor: pointer; }
+  .knapp + .knapp { border-left: 1px solid var(--blekk); }
+  .knapp[aria-pressed="true"] { background: var(--blekk); color: var(--hvit); }
+  input[type=range] { width: 100%; accent-color: var(--skjemagronn); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<div id="ar"></div>
+
+<section id="start">
+  <div class="skjema">
+    <div class="hode">
+      <h1>Minnested</h1>
+      <p class="undertittel">Prøveversjon</p>
+    </div>
+    <dl class="felter">
+      <div class="felt"><dt>Skiltet</dt><dd id="felt-montering"></dd></div>
+      <div class="felt"><dt>Bygget står</dt><dd id="felt-avstand"></dd></div>
+      <div class="felt"><dt>Skiltbredde</dt><dd id="felt-bredde"></dd></div>
+      <div class="felt"><dt>Modell</dt><dd id="felt-modell"></dd></div>
+    </dl>
+    <p class="instruks" id="instruks"></p>
+    <button id="startknapp" type="button">Start kamera</button>
+  </div>
+  <p class="fot">Skiltet skrives ut fra <a href="skilt.html">skilt.html</a>.</p>
+</section>
+
+<div id="ar-ui" hidden>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div class="panel">
+    <div class="gruppe">
+      <span>Visning</span>
+      <div class="valg">
+        <button class="knapp" type="button" data-skala="full" aria-pressed="true">Fullskala</button>
+        <button class="knapp" type="button" data-skala="bord" aria-pressed="false">Bord</button>
+      </div>
+    </div>
+    <div class="gruppe">
+      <span>Uttrykk</span>
+      <div class="valg">
+        <button class="knapp" type="button" data-stil="massiv" aria-pressed="true">Massiv</button>
+        <button class="knapp" type="button" data-stil="strek" aria-pressed="false">Strek</button>
+      </div>
+    </div>
+    <div class="gruppe">
+      <label for="opasitet"><span>Synlighet</span></label>
+      <input id="opasitet" type="range" min="10" max="100" value="100">
+    </div>
+  </div>
+</div>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
