@@ -28,5 +28,5 @@ export const CONFIG = {
   bordmodellSkala: 1 / 50,
 
   // Utjevning av skjelving. Lavere filterBeta gir roligere, men tregere bilde.
-  utjevning: { filterMinCF: 0.001, filterBeta: 10 }
+  utjevning: { filterMinCF: 0.001, filterBeta: 1000 }
 };
