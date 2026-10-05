@@ -6,7 +6,7 @@ export const CONFIG = {
 
   // "bakke": skiltet ligger flatt, toppkanten peker mot bygget.
   // "vegg":  skiltet står loddrett og vender mot deg, bygget står bak det.
-  montering: "bakke",
+  montering: "vegg",
 
   // Bare for "vegg": høyde fra bakken til midten av skiltbildet.
   skiltHoyde: 1.0,
@@ -28,5 +28,5 @@ export const CONFIG = {
   bordmodellSkala: 1 / 50,
 
   // Utjevning av skjelving. Lavere filterBeta gir roligere, men tregere bilde.
-  utjevning: { filterMinCF: 0.0001, filterBeta: 0.001 }
+  utjevning: { filterMinCF: 0.0005, filterBeta: 0.005 }
 };
